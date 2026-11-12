@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How fishy is this email?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{--bg:#F5F3EF;--card:#fff;--ink:#050606;--muted:#5a5c58;--line:#d9d6cf;--accent:#C8FF00;--accent-ink:#050606;--bad:#c9382a;--warn:#9a6400;--ok:#3f7a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#050606;--card:#101312;--ink:#F5F3EF;--muted:#9a9d97;--line:#2a2e2c;--accent:#C8FF00;--accent-ink:#050606;--bad:#ff7a6b;--warn:#f0b64a;--ok:#C8FF00}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#050606;--card:#101312;--ink:#F5F3EF;--muted:#9a9d97;--line:#2a2e2c;--accent:#C8FF00;--accent-ink:#050606;--bad:#ff7a6b;--warn:#f0b64a;--ok:#C8FF00}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:28px 18px 56px}
+h1{font:800 clamp(2rem,9vw,3rem)/1.05 "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 10px;letter-spacing:-.02em}
+.lead{color:var(--muted);margin:0 0 26px}
+label{display:block;font-weight:600;margin:18px 0 6px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
+textarea{min-height:170px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.hint{font-size:.9rem;color:var(--muted);margin:5px 0 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button{font:700 1rem "Bricolage Grotesque",system-ui,sans-serif;border-radius:10px;padding:13px 20px;cursor:pointer;border:2px solid var(--ink)}
+.go{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .go{color:#06222a}}
+.alt{background:transparent;color:var(--ink)}
+#out{margin-top:34px}
+.verdict{border-radius:14px;padding:22px;background:var(--card);border:2px solid var(--line)}
+.verdict .num{font:800 4rem/1 "Bricolage Grotesque",system-ui,sans-serif}
+.verdict .num small{font-size:1.4rem;color:var(--muted);font-weight:500}
+.verdict h2{margin:6px 0 0;font:700 1.4rem "Bricolage Grotesque",system-ui,sans-serif}
+.bar{height:10px;border-radius:6px;background:var(--line);margin:16px 0 0;overflow:hidden}
+.bar i{display:block;height:100%;width:0;transition:width .6s ease}
+.bad{border-color:var(--bad)}.bad .num,.bad h2{color:var(--bad)}.bad .bar i{background:var(--bad)}
+.warn{border-color:var(--warn)}.warn .num,.warn h2{color:var(--warn)}.warn .bar i{background:var(--warn)}
+.ok{border-color:var(--ok)}.ok .num,.ok h2{color:var(--ok)}.ok .bar i{background:var(--ok)}
+ul{list-style:none;padding:0;margin:18px 0 0}
+li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+li b{flex:none;min-width:2.6rem;text-align:center;border-radius:8px;padding:2px 6px;background:var(--bad);color:#fff;font-size:.9rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) li b{color:#2a0a06}}
+li span{display:block;color:var(--muted);font-size:.93rem}
+li div{min-width:0}li p{margin:8px 0 0;font-size:.93rem}li em{font-style:normal;font-weight:600}
+.foot{margin-top:34px;font-size:.88rem;color:var(--muted)}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-10px)}30%{transform:translateX(9px)}45%{transform:translateX(-7px)}60%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--glow) 35%,transparent)}}
+.bad{--glow:var(--bad)}.warn{--glow:var(--warn)}
+.verdict.alarm{animation:shake .6s ease,pulse .8s ease 3}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}.verdict.alarm{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>How fishy is this email?</h1>
+<p class="lead">Paste the sender and the message. You get a score from 0 to 10 and the reasons behind it. Everything runs in your browser, so nothing is uploaded.</p>
+
+<label for="from">Sender (the From line)</label>
+<input id="from" placeholder="PayPal Support &lt;support@paypa1.com&gt;" autocomplete="off">
+
+<label for="body">Message text</label>
+<textarea id="body" placeholder="Paste the email here. Including the HTML source lets the tool compare link text with where each link really goes."></textarea>
+<p class="hint">Tip: in Gmail, ⋮ → “Show original” gives you the full source.</p>
+
+<div class="row">
+<button class="go" id="check">Check email</button>
+<button class="alt" id="demo">Try an example</button>
+<button class="alt" id="clear">Clear</button>
+</div>
+
+<section id="out" aria-live="polite"></section>
+
+<p class="foot">This is a learning tool, not a guarantee. If an email asks for money or passwords, go to the company’s site by typing its address yourself.</p>
+</main>
+
+<script>
+const BRANDS=["paypal","google","microsoft","amazon","apple","netflix","facebook","instagram","dhl","fedex","docusign","chase","wellsfargo"];
+const SHORT=["bit.ly","tinyurl.com","t.co","goo.gl","ow.ly","is.gd","cutt.ly","rb.gy"];
+const URGENT=["urgent","act now","immediately","within 24 hours","account locked","account suspended","will be closed","final notice","verify now","limited time"];
+const CREDS=["password","verify your account","confirm your identity","social security","credit card","card number","login details","one-time code"];
+const GENERIC=["dear customer","dear user","dear client","dear account holder"];
+const $=id=>document.getElementById(id);
+
+const TIPS=[
+["Lookalike","Scammers register domains that look like real brands, so you trust the sender at a glance.","Don’t reply or click. Open the real company’s app or site yourself."],
+["Name and address","Anyone can set any display name. The address shows who really sent it.","Check the full address, not just the name. If it doesn’t match the company, delete it."],
+["destination","The visible text is what you trust, but the hidden address is where you land, often a fake login page.","Don’t tap it. Type the company’s address into your browser yourself."],
+["raw IP","Real companies use named websites. A number address often points to a temporary scam server.","Don’t open it. Report the email as phishing."],
+["Shortened","Short links hide the real destination, so you can’t judge it before tapping.","Ask the sender through another channel, or skip the link."],
+["HTTPS","Without HTTPS the connection isn’t encrypted, so what you type could be read or changed.","Don’t enter any details on that page."],
+["Pressure","Scammers rush you so you act before you think.","Pause. Contact the company through its official app or phone number."],
+["sensitive","Real companies almost never ask for passwords or card numbers by email.","Share nothing. Log in through the official site instead."],
+["Generic","Mass scam emails don’t know your name, while real services usually use it.","Treat it as a minor sign and look for other warnings."]
+];
+function norm(s){return s.toLowerCase().replace(/0/g,"o").replace(/1/g,"l").replace(/3/g,"e").replace(/5/g,"s").replace(/rn/g,"m").replace(/-/g,"")}
+function rootLabel(host){const p=host.toLowerCase().split(".");return p.length>1?p[p.length-2]:p[0]}
+function hostOf(u){try{return new URL(u).hostname}catch(e){return ""}}
+
+function analyze(from,body){
+  const f=[];const add=(pts,title,why)=>{const t=TIPS.find(x=>title.includes(x[0]));f.push({pts,title,why,risk:t?t[1]:"",todo:t?t[2]:""})};
+  const lower=body.toLowerCase();
+  const m=from.match(/^(.*?)<([^>]+)>/);
+  const name=(m?m[1]:"").toLowerCase();
+  const addr=(m?m[2]:from).trim().toLowerCase();
+  const domain=addr.split("@")[1]||"";
+  const label=rootLabel(domain);
+
+  if(domain){
+    const look=BRANDS.find(b=>label!==b&&norm(label).includes(b));
+    if(look) add(3,"Lookalike sender domain","“"+domain+"” imitates “"+look+"” but is not the real domain.");
+    const named=BRANDS.find(b=>name.includes(b)&&!label.includes(b));
+    if(named&&!look) add(2,"Name and address don’t match","The display name says “"+named+"”, but the address comes from “"+domain+"”.");
+  }
+
+  const links=[];
+  const re=/<a[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;let x;
+  while((x=re.exec(body))){links.push({href:x[1],text:x[2].replace(/<[^>]+>/g,"").trim()})}
+  (body.match(/https?:\/\/[^\s"'<>)]+/g)||[]).forEach(u=>{if(!links.some(l=>l.href===u))links.push({href:u,text:""})});
+
+  const mism=links.find(l=>{const t=l.text.match(/[a-z0-9-]+(\.[a-z0-9-]+)+/i);return t&&hostOf(l.href)&&rootLabel(hostOf(l.href))!==rootLabel(t[0])});
+  if(mism) add(3,"Link text doesn’t match its destination","It says “"+mism.text.slice(0,40)+"” but goes to “"+hostOf(mism.href)+"”.");
+  if(links.some(l=>/^\d+\.\d+\.\d+\.\d+$/.test(hostOf(l.href)))) add(3,"Link uses a raw IP address","Real companies link to a named website, not a number.");
+  const sh=links.find(l=>SHORT.includes(hostOf(l.href)));
+  if(sh) add(1,"Shortened link","“"+hostOf(sh.href)+"” hides where the link really leads.");
+  if(links.some(l=>l.href.toLowerCase().startsWith("http://"))) add(1,"Link without HTTPS","At least one link isn’t encrypted.");
+
+  const u=URGENT.filter(w=>lower.includes(w));
+  if(u.length) add(2,"Pressure wording","Uses urgency or threats: “"+u.slice(0,3).join("”, “")+"”.");
+  const c=CREDS.filter(w=>lower.includes(w));
+  if(c.length) add(2,"Asks for sensitive details","Mentions “"+c.slice(0,2).join("”, “")+"”. Real companies rarely ask by email.");
+  if(GENERIC.some(w=>lower.includes(w))) add(1,"Generic greeting","It doesn’t use your name.");
+  return f;
+}
+
+function render(f){
+  const total=Math.min(10,f.reduce((a,b)=>a+b.pts,0));
+  const cls=total>=6?"bad":total>=3?"warn":"ok";
+  const word=total>=6?"Likely phishing":total>=3?"Suspicious":"Probably safe";
+  const li=f.length?f.map(i=>`<li><b>+${i.pts}</b><div><strong>${esc(i.title)}</strong><span>${esc(i.why)}</span><p><em>Why it matters:</em> ${esc(i.risk)}</p><p><em>What to do:</em> ${esc(i.todo)}</p></div></li>`).join(""):"<li><div>No warning signs found.<span>Still be careful with unexpected requests.</span></div></li>";
+  $("out").innerHTML=`<div class="verdict ${cls}"><div class="num">${total}<small>/10</small></div><h2>${word}</h2><div class="bar"><i id="fill"></i></div><ul>${li}</ul></div>`;
+  requestAnimationFrame(()=>{$("fill").style.width=total*10+"%"});
+  if(total>=3){document.querySelector(".verdict").classList.add("alarm");alarm(total>=6);try{if(navigator.vibrate)navigator.vibrate(total>=6?[200,100,200,100,300]:[200])}catch(e){}}
+  $("out").scrollIntoView({behavior:"smooth",block:"start"});
+}
+let ctx;
+function alarm(strong){
+  try{
+    ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==="suspended")ctx.resume();
+    const n=strong?6:3,t0=ctx.currentTime;
+    for(let i=0;i<n;i++){
+      const o=ctx.createOscillator(),g=ctx.createGain(),t=t0+i*.22;
+      o.type="square";
+      o.frequency.setValueAtTime(i%2?660:880,t);
+      g.gain.setValueAtTime(.0001,t);
+      g.gain.exponentialRampToValueAtTime(.18,t+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,t+.2);
+      o.connect(g);g.connect(ctx.destination);
+      o.start(t);o.stop(t+.21);
+    }
+  }catch(e){}
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+$("check").onclick=()=>{
+  if(!$("from").value.trim()&&!$("body").value.trim()){$("out").innerHTML='<p class="hint">Paste a sender or message first, or try the example.</p>';return}
+  render(analyze($("from").value,$("body").value));
+};
+$("demo").onclick=()=>{
+  $("from").value="PayPal Support <support@paypa1-secure.com>";
+  $("body").value='Dear customer,\n\nYour account is locked! Act now or it will be closed within 24 hours.\nPlease verify your account and confirm your password:\n\n<a href="http://185.22.9.14/login">www.paypal.com/verify</a>\n\nThanks,\nPayPal Team';
+  $("check").click();
+};
+$("clear").onclick=()=>{$("from").value="";$("body").value="";$("out").innerHTML=""};
+</script>
+</body>
+</html>
