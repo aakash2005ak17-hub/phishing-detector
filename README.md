@@ -40,3 +40,6 @@ This is a learning project built on simple rules. It can miss real scams and can
 ## Tech
 
 HTML, CSS and plain JavaScript. No libraries.
+### Screenshot
+
+![Phishing Detector](screenshot.png)
